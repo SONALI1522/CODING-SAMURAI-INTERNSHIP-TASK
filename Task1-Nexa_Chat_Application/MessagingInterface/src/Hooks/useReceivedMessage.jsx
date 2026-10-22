@@ -1,32 +1,58 @@
-import React, {useState,useEffect} from "react";
-import useChat from "../manageState/useChat.js";
+import { useEffect, useState } from "react";
 import axios from "axios";
-function useReceivedMessage(){
+import useChat from "../manageState/useChat.js";
+
+function useReceivedMessage() {
     const [loading, setLoading] = useState(false);
-    const {messages, setMessages, selectedChat} = useChat();
-    useEffect(() =>{
-        const loadChatMessages = async() =>{
+    const { messages, setMessages, selectedChat } = useChat();
+
+    useEffect(() => {
+        let cancelled = false;
+        setMessages([]);
+
+        if (!selectedChat?._id) {
+            setLoading(false);
+            return;
+        }
+        const loadChatMessages = async () => {
             setLoading(true);
-            if(selectedChat && selectedChat._id){
-            try{
-                const response = await axios.get(`http://localhost:3000/message/fetchMessages/${selectedChat._id}`, 
-                {
-                    withCredentials: true
-                });
-                setMessages(response.data.messages);
-                setLoading(false);
+
+            try {
+                const response = await axios.get(
+                    `http://localhost:3000/message/fetchMessages/${selectedChat._id}`,
+                    { withCredentials: true }
+                );
+
+                if (!cancelled) {
+                    setMessages(response.data.messages || []);
+                }
             } catch (error) {
-                console.error("Error fetching messages:", error);
-                setLoading(false);
-            }
+                if (!cancelled) {
+                    if (error.response?.status === 404) {
+                        setMessages([]);
+                    } else {
+                        console.error(
+                            "Error fetching messages:",
+                            error
+                        );
+                        setMessages([]);
+                    }
+                }
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
             }
         };
-        loadChatMessages();
-    }, [selectedChat, setMessages]);
 
-    return {
-        messages,
-        loading
-    }
+        loadChatMessages();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [selectedChat?._id, setMessages]);
+
+    return { messages, loading };
 }
+
 export default useReceivedMessage;
