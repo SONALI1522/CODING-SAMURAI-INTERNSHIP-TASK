@@ -61,8 +61,6 @@ socketServer.use((socket, next) => {
 socketServer.on("connection", (socket) => {
     const userId = socket.userId;
 
-    console.log("New authenticated client:", socket.id);
-
     users[userId] = socket.id;
 
     socketServer.emit("getonline", Object.keys(users));
