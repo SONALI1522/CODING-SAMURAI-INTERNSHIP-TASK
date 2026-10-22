@@ -1,0 +1,43 @@
+
+html,body{
+ background:linear-gradient(
+    135deg,
+    rgb(235,215,233),
+    rgb(156,80,317)
+  );
+}
+#root {
+  border-radius: 10px;
+  background-color: #e2b3fd;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+#root:hover{
+  box-shadow: 0 0 20px rgba(173, 74, 223, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+.nexa-logo{
+  border-radius: 50%;
+}
+.nexa-logo:hover{
+  transform: scale(1.1);
+  transition: transform 0.3s ease-in-out;
+  border: 2px solid rgb(234, 178, 248);
+}
+
+.online-video{
+  margin-top: 20px;
+  box-shadow: 0 0 20px white;
+}
+.signup-button:hover{
+ background-color: #5671f9 !important;
+ border: 2px solid white;
+ border-radius: 20px;
+}
+.login-button:hover{
+  background-color: #9039e8 !important;
+  border: 2px solid white;
+  border-radius: 20px;
+}
